@@ -139,10 +139,10 @@ function sequence_helper(gt_side,image_left,image_right) {
 	var curr_im = null;
 	p.gt_side.push(gt_side);
 	curr_im = new Image();
-	curr_im.src = base_url + image_left + '.png';
+	curr_im.src = base_url + image_left + '.jpg';
 	p.images_left.push(curr_im);
 	curr_im = new Image();
-	curr_im.src = base_url + image_right + '.png';
+	curr_im.src = base_url + image_right + '.jpg';
 	p.images_right.push(curr_im);
 }
 
@@ -168,7 +168,7 @@ function makeExperiment() {
 
 
 var p = {};
-var base_url = {{BASE_URL}};
+var base_url = '{{BASE_URL}}';
 var first_trial = true;
 var num_correct = 0;
 
