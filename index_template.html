@@ -1,0 +1,478 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+	<head>
+		<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+		
+		<script src="https://s3.amazonaws.com/MTurks/jquery-1.11.2.min.js"></script>
+		<script src="https://s3.amazonaws.com/MTurks/jquery-ui.min.js"></script>
+		<script src="https://s3.amazonaws.com/MTurks/image-picker.min.js"></script>
+		
+				
+		<style>
+			body {
+				margin: 0px 50px;
+				font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+				font-size: 14pt;
+			}
+			
+			#content_div {
+				margin: auto;
+				width: 900px;
+			}
+			
+			h3 {
+			}
+			
+			#long_info {
+			}
+			
+			#couhes {
+				color: #777;
+				font-style: italic;
+				margin: 20px 0px;
+				font-size: 12pt;
+			}
+			
+			#start_button, #continue_button {
+				width:300px;
+				height:80px;
+				font-size:30px;
+				border: 2px solid #AAA;
+				border-radius: 25px;
+				background-color: #EEE;
+			}
+			#start_button:hover {
+				border: 2px solid #999;
+				background-color: #CCC;
+			}
+			
+			button, #submit_button {
+				width:200px;
+				height:50px;
+				font-size:24px;
+				border: 1px solid #CCC;
+				border-radius: 10px;
+				background-color: #EEE;
+			}
+			button:hover {
+				border: 1px solid #AAA;
+				background-color: #CCC;
+			}
+			
+			#images_div {
+				margin: 100px 0px 40px 0px;
+			}
+			
+			#trial_num {
+				margin: 20px 0px 0px 0px;
+				font-size:16px;
+				color:#777;
+				font-style:italic;
+			}
+			
+			#feedback {
+			}
+			
+			#experiment_start {
+				font-size: 20px;
+			}
+			
+			table.demo_imgs {
+				text-align: center;
+				font-size: 12pt;
+				margin-top: 20px;
+			}
+			table.demo_imgs td {
+				padding: 2px 10px 0px 10px;
+			}
+		</style>
+
+
+<script src="//uniqueturker.myleott.com/lib.js" type="text/javascript"></script>
+<script type="text/javascript">
+(function(){
+    var ut_id = "{{UT_ID}}";
+    if (UTWorkerLimitReached(ut_id)) {
+        document.getElementById('mturk_form').style.display = 'none';
+        document.getElementsByTagName('body')[0].innerHTML = "You have already completed the maximum number of HITs allowed by this requester. Please click 'Return HIT'.";
+    }
+})();
+</script>
+
+<script type="text/javascript">
+
+// from http://stackoverflow.com/questions/15589764/how-to-hide-the-link-to-an-external-web-page-in-a-hit-before-workers-accept-the		
+$.extend({
+  getUrlVars: function(){
+    // From http://code.google.com/p/js-uri/source/browse/trunk/lib/URI.js
+    var parser = /^(?:([^:\/?\#]+):)?(?:\/\/([^\/?\#]*))?([^?\#]*)(?:\?([^\#]*))?(?:\#(.*))?/;
+    var result = window.location.href.match(parser);
+    var scheme    = result[1] || null;
+    var authority = result[2] || null;
+    var path      = result[3] || null;
+    var query     = result[4] || null;
+    var fragment  = result[5] || null
+    if (query === null || query === undefined) {
+      return {};
+    }
+    var vars = [], hash;
+    var hashes = query.split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+      hash = hashes[i].split('=');
+      vars.push(hash[0]);
+      vars[hash[0]] = hash[1];
+    }
+    return vars;
+  },
+  getUrlVar: function(name){
+    return $.getUrlVars()[name];
+  }
+});
+
+function setBodyHeight() {
+  var wh = $(window).height();
+  $('body').height(wh); // body height = window height
+}
+
+function sequence_helper(gt_side,image_left,image_right) {
+	var curr_im = null;
+	p.gt_side.push(gt_side);
+	curr_im = new Image();
+	curr_im.src = base_url + image_left + '.png';
+	p.images_left.push(curr_im);
+	curr_im = new Image();
+	curr_im.src = base_url + image_right + '.png';
+	p.images_right.push(curr_im);
+}
+
+function makeExperiment() {
+    p.is_practice = false;
+	p.im_num = 0;
+    p.initialized = false;
+    p.is_assigned = ($.getUrlVar('assignmentId') != 'ASSIGNMENT_ID_NOT_AVAILABLE');
+    p.practice_intro_shown = false;
+    p.experiment_intro_shown = false;
+	p.npractice = 10;
+	p.total_num_ims = 50;
+	
+	p.gt_side = [];
+	p.images_left = [];
+	p.images_right = [];
+	
+	
+	{{SEQUENCE}}
+		
+    return this;
+}
+
+
+var p = {};
+var base_url = {{BASE_URL}};
+var first_trial = true;
+var num_correct = 0;
+
+function assert(x, msg) { if (!x) { throw("Assertion failed: " + msg); } }
+
+function now() { return (new Date()).getTime() / 1000.; }
+
+function end() {
+    $('#short_instructions').hide();
+	$('#score').html("You got " + (Math.round(100*(num_correct/(p.total_num_ims-p.npractice)))) + "% correct.<br><br>");
+    $('#done').show();
+	$("#submitButton").show();
+}
+
+function showFixation() {
+    document.im.src = p.fixation_im.src;
+}
+function showBlank() {
+    document.im.src = "images/start_image.png";
+}
+
+function continue_to_main_expt() {
+	$('#experiment_start').hide();
+	next();
+}
+
+function next() {
+	
+	$('#feedbackA').html('');
+	$('#feedbackB').html('');
+	
+	$('#imageA').css('border','0px solid black');
+	$('#imageB').css('border','0px solid black');
+	
+    if (p.is_practice && (p.im_num == p.npractice)) {
+    	
+		p.is_practice = false;
+		
+    	$('#feedback').hide();	
+    	$('#imageA').hide();
+    	$('#imageB').hide();
+    	$('#imageA_div').hide();
+    	$('#imageB_div').hide();
+    	$('#short_instructions').html("");
+        
+    	$('#experiment_start').show();
+    	
+    	return;
+    }
+	else if (p.im_num == p.total_num_ims) {
+		
+		end();
+		
+		return;
+	}
+	
+	var display_time = 1000;
+	var fade_time = 200;
+	var isi = 300;
+	
+	var offset_time = 0;
+	
+    $('#feedback').hide();	
+	$('#imageA').hide();
+	$('#imageB').hide();
+	$('#short_instructions').html("");
+	$('#short_instructions').show();
+	$('#imageA_div').show();
+	$('#imageB_div').show();
+	
+	if (p.is_practice) {
+		$('#trial_num').html("<br><center>Practice trial " + (p.im_num+1) + " out of " + p.npractice + "</center>");
+	}
+	else {
+		$('#trial_num').html("<br><center>Trial " + (p.im_num+1-p.npractice) + " out of " + (p.total_num_ims-p.npractice) + "</center>");
+	}
+	
+	var imageA = document.getElementById('imageA');
+	imageA.src = p.images_left[p.im_num].src;
+	
+	if (first_trial) {
+		offset_time += isi;
+		first_trial = false;
+	}
+	$('#imageA').delay(offset_time+isi*3).fadeIn(0).delay(display_time).fadeOut(0); offset_time += isi*3+display_time;
+	
+	var imageB = document.getElementById('imageB');
+	imageB.src = p.images_right[p.im_num].src;
+	
+	$('#imageB').delay(offset_time+isi*2).fadeIn(0).delay(display_time).fadeOut(0); offset_time += isi*2+display_time;
+	
+	fade_time = 50;
+	setTimeout(function() { 
+		$('#trial_num').show(); 
+		$('#short_instructions').html("Which image do you think had <b>fake</b> colors?");
+		$('#buttonA').fadeIn(fade_time);
+		$('#buttonB').fadeIn(fade_time);
+	}, offset_time+100);
+}
+
+
+function submitAnswer(answer) {
+	
+	$('#buttonA').hide();
+	$('#buttonB').hide();
+	$('#trial_num').hide();
+	
+	if (p.is_practice) {
+		   var is_correct = (p.gt_side[p.im_num]!=answer);
+		
+		   if (is_correct) {
+	       	   $('#feedback').html('<img width=24px src="http://web.mit.edu/phillipi/Public/colorization/check.png"/><br><span style="color:green;">You are correct!</span>');
+		   }
+		   else {
+			   $('#feedback').html('<span style="color:#cc0000">Incorrect. Those colors were real.</span>');
+		   }
+		   
+		   if (answer=='left') {
+			   if (is_correct) {
+	      	   		$('#imageA').css('border','6px solid green');
+		   	   }
+			   else {
+			   		$('#imageA').css('border','6px solid #cc0000');
+			   }
+		   }
+		   else {
+			   if (is_correct) {
+	      	   		$('#imageB').css('border','6px solid green');
+		   	   }
+			   else {
+			   		$('#imageB').css('border','6px solid #cc0000');
+			   }
+		   }
+		
+		$('#feedback').show();
+		$('#short_instructions').html('');
+		if (p.gt_side[p.im_num]=='left') {
+			$('#feedbackA').html('Real');
+			$('#feedbackB').html('Fake');
+		}
+		else {
+			$('#feedbackA').html('Fake');
+			$('#feedbackB').html('Real');
+		}
+   		$('#imageA').show();
+   		$('#imageB').show();
+   		$('#imageA_div').show();
+   		$('#imageB_div').show();
+		
+		$("#selection"+(p.im_num+1)).val(answer);
+		
+		p.im_num = p.im_num+1;
+				
+		setTimeout(function() { next(); }, 2400);
+	}
+	else {
+		var is_correct = (p.gt_side[p.im_num]!=answer);
+		num_correct += is_correct;
+		
+		$('#imageA').hide();
+		$('#imageB').hide();
+		$('#imageA_div').hide();
+		$('#imageB_div').hide();
+		
+		$("#selection"+(p.im_num+1)).val(answer);
+		
+		p.im_num = p.im_num+1;
+				
+		next();
+	}
+}
+
+function startExperiment() {
+
+    if (p == null) {
+        return;
+    }
+    
+    p.is_practice = true;
+	
+    $('#buttons_start').hide();
+    $('#long_info').hide();
+    $('#couhes').hide();
+    $('#teaser').hide();
+
+    $('#images_div').show();
+
+    next();
+}
+
+
+function init() {
+	
+	$(window).bind('resize', function() { setBodyHeight(); });
+	
+	makeExperiment();
+	
+	$('#imageA').hide();
+	$('#imageB').hide();
+	$('#buttonA').hide();
+	$('#buttonB').hide();
+	
+	$("#submitButton").hide();
+	
+	if (p.is_assigned) {
+		$('#start_button').removeAttr('disabled');
+		$('#start_button').html('Start!');
+	}
+}
+
+$(document).ready(init);
+
+function restartExperiment() {
+}
+
+</script>
+    
+  </head>
+
+
+  <body>
+  <div id = "content_div">
+	<div id="images_div" style = "display:none" width = "100%" align = "center">
+	  <div id="short_instructions" style="display:none;"></div>
+      <div id="imageA_div" style="height:258px; width:258px; display:inline-block; border:0px solid black;">
+		  <div id="feedbackA" style="display:block; height: 30px"></div><img id="imageA" style="display:block;" width="256px"/>
+		  <div id="buttonA" style="position:relative; width:100%; height:100%"><button type="button" onclick="submitAnswer('left')" style="position:absolute; width:100%; height:100%; top:0; left:0; z-index: 10;">Left image</button></div>
+	  </div>
+	  <div id="imageB_div" style="height:258px; width:258px; display:inline-block; border:0px solid black;">
+		  <div id="feedbackB" style="display:block; height: 30px"]></div><img id="imageB" style="display:block;" width="256px"/>
+		  <div id="buttonB" style="position:relative; width:100%; height:100%"><button type="button" onclick="submitAnswer('right')" style="position:absolute; width:100%; height:100%; top:0; left:0; z-index: 10;">Right image</button></div>
+	  </div>
+    </div>
+
+    <div id= "feedback" align=center style="display:none"></div>
+	
+    <div id = "experiment_start" style="width: 800px; margin: 0 auto; text-align: left; display:none">
+      <br>You've completed the practice exercise!  Click "Continue" to continue on to the main task. The main task will be identical except that you won't be told whether or not your guess was correct.</br>
+	  <div id = "buttons_continue" align=center>
+		  <button id="continue_button" type="button" onClick="continue_to_main_expt()">Continue!</button>
+	  </div>
+    </div>
+	
+	<div id="trial_num" style="display:none"></div>
+    
+    <div id="short_info" align="center" style="width: 80%; margin: 0 auto; text-align: left; display:none" align = center>
+    </div>
+
+    <br>
+    <br>
+    
+    
+    <div id="long_info" style = "width:100%">
+      <b>About this HIT:</b>  
+	  <br><br>
+      <ul>
+		  
+		<li><b>Please only participate in this HIT if you have normal color vision.</b></li><br>
+		  
+        <li>It should take about 5 minutes.</li><br>
+		
+        <li>You will take part in an experiment involving
+        color perception. You'll see a series of pairs of images. In each pair, one image has real colors while the other image has "fake" colors, generated using a computer program. Your task is to
+        determine which image has fake colors. Sometimes the fake colors may look very plausible.<br><br>
+		
+        <li>You will complete a short practice (less than 1 minute) before
+        starting the main task.</li>
+		
+      </ul>
+
+    </div>
+
+    
+	  <div id = "buttons_start" align=center>
+      	<br>
+      	<button id="start_button" type="button" onClick="startExperiment()" disabled=true><span style='font-size:16pt'>Please accept HIT to start</span></button>
+		
+      	<div id = "not_assigned" align=left style = "display:none"">
+      		<p>Please accept the HIT to begin!</p>
+      	</div>
+	  </div>
+
+    <div id="done" align = "center" style = "display:none"> 
+        Thank you! You have completed the experiment.<br><br><div id="score"></div> 
+		<div><textarea id="comments" name="comments" rows="3" cols="31">Comments?</textarea></div><br><br>
+		Please click the submit button below to finish.
+    </div>
+
+    <div id="couhes">
+      <br>
+      <span id="informed_consent_text">By making judgments about these images, you are participating in a study being performed by computer scientists at UC Berkeley. If you have questions about this research, please contact Phillip Isola at phillipi@berkeley.edu. Your participation in this research is voluntary. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</span>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+  </div>
+  
+{{SELECTION}}
+
+
+</body>
+
+
+</html>
