@@ -2,7 +2,7 @@
 
 Running "real vs fake" experiments on Amazon Mechanical Turk.
 
-# Synopsis
+## Synopsis
 Runs a series "real vs fake" trials. Each trial pits a real image against a generated image. 
 
 ## Usage
@@ -10,4 +10,9 @@ Runs a series "real vs fake" trials. Each trial pits a real image against a gene
 - Set experiment parameters by modifying "opt" in mk_expt.m.
 - Run mk_expt.m to generate csv and index.html for Turk.
 - Create experiment on Turk. Paste contents of index.html into HIT html code. Upload HIT data from the generated csv.
+
+## Features
+- Can enforce that each Turker can only do HIT once
+- Can run a multiple experiments at once, with each Turker being assigned a random experiment (this way the population is sampled iid w.r.t. time for each experiment)
+
 
