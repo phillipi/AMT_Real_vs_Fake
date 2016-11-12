@@ -36,7 +36,8 @@ function [] = mk_expt(expt_name)
 	        
 	        for i=1:length(which_imgs)
 	            
-	            if (rand(1)<=opt.vigilance_freq) % opt.vigilance_freq proportion of trials are vigilance checks
+				
+	            if (opt.use_vigilance && (rand(1)<=opt.vigilance_freq)) % opt.vigilance_freq proportion of trials are vigilance checks
 	                alg_im_name = sprintf('%s/%d',opt.vigilance_path,which_imgs(i));
 	            else
 	                alg_im_name = sprintf('%s/%d',opt.which_algs_paths{which_alg_curr},which_imgs(i));

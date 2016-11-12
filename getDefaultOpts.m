@@ -8,9 +8,10 @@ function [opt] = getDefaultOpts()
 	opt.Npairs = 60;                        % number of paired comparisons per HIT
 	opt.Nhits_per_alg = 100;                % number of HITs per algorithm
 	opt.vigilance_freq = 0.1;               % percent of trials that are vigilance tests
+	opt.use_vigilance = true;               % include vigilance trials (obviously fake images to check that Turkers are paying attention)	
 	opt.ut_id = 'unset';                    % set this using http://uniqueturker.myleott.com/
 	opt.base_url = 'unset';                 % url where images to test are accessible as "opt.base_url/n.png", for integers n
 	opt.instructions_file = 'unset';        % instructions appear at the beginning of the HIT
 	opt.short_instructions_file = 'unset';  % short instructions are shown at the top of every trial
-	opt.consent_file = 'unset';             % informed consent text appears the beginning of the HIT	
+	opt.consent_file = 'unset';             % informed consent text appears the beginning of the HIT
 end
