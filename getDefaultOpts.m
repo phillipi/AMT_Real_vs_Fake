@@ -14,4 +14,7 @@ function [opt] = getDefaultOpts()
 	opt.instructions_file = 'unset';        % instructions appear at the beginning of the HIT
 	opt.short_instructions_file = 'unset';  % short instructions are shown at the top of every trial
 	opt.consent_file = 'unset';             % informed consent text appears the beginning of the HIT
+	opt.im_height = 256;                    % dimensions at which to display the stimuli
+	opt.im_width = 256;                     %
+	opt.paired = true;                      % if true, then fake/n.jpg will be pitted against real/n.jpg; if false, fake/n.jpg will be pitted against real/m.jpg, for random n and m
 end

@@ -32,25 +32,31 @@ function [] = mk_expt(expt_name)
 	    
 	    for j=1:opt.Nhits_per_alg % same number of HITs for each alg
 	        
-	        which_imgs = randperm(opt.Nimgs); which_imgs = which_imgs(1:opt.Npairs); % choose random set of images to test on, from test set
-	        
-	        for i=1:length(which_imgs)
+	        which_imgs_alg = randperm(opt.Nimgs); which_imgs_alg = which_imgs_alg(1:opt.Npairs); % choose random set of images to test on, from test set
+			which_imgs_gt = [];
+			if (opt.paired)
+				which_imgs_gt = which_imgs_alg;
+			else
+				which_imgs_gt = randperm(opt.Nimgs); which_imgs_gt = which_imgs_gt(1:opt.Npairs); % choose random set of images to test on, from test set
+			end
+			
+	        for i=1:opt.Npairs
 	            
 				
 	            if (opt.use_vigilance && (rand(1)<=opt.vigilance_freq)) % opt.vigilance_freq proportion of trials are vigilance checks
-	                alg_im_name = sprintf('%s/%d',opt.vigilance_path,which_imgs(i));
+	                alg_im_name = sprintf('%s/%d',opt.vigilance_path,which_imgs_alg(i));
 	            else
-	                alg_im_name = sprintf('%s/%d',opt.which_algs_paths{which_alg_curr},which_imgs(i));
+	                alg_im_name = sprintf('%s/%d',opt.which_algs_paths{which_alg_curr},which_imgs_alg(i));
 	            end
 	            
 	            if (randi(2)==1) % randomize which side of UI gt is on
 	                gt_side{(which_alg_curr-1)*opt.Nhits_per_alg+j+1,i} = 'left';
-	                images_left{(which_alg_curr-1)*opt.Nhits_per_alg+j+1,i} = sprintf('%s/%d',opt.gt_path,which_imgs(i));
+	                images_left{(which_alg_curr-1)*opt.Nhits_per_alg+j+1,i} = sprintf('%s/%d',opt.gt_path,which_imgs_gt(i));
 	                images_right{(which_alg_curr-1)*opt.Nhits_per_alg+j+1,i} = alg_im_name;
 	            else
 	                gt_side{(which_alg_curr-1)*opt.Nhits_per_alg+j+1,i} = 'right';
 	                images_left{(which_alg_curr-1)*opt.Nhits_per_alg+j+1,i} = alg_im_name;
-	                images_right{(which_alg_curr-1)*opt.Nhits_per_alg+j+1,i} = sprintf('%s/%d',opt.gt_path,which_imgs(i));
+	                images_right{(which_alg_curr-1)*opt.Nhits_per_alg+j+1,i} = sprintf('%s/%d',opt.gt_path,which_imgs_gt(i));
 	            end
 	        end
 	    end
@@ -80,6 +86,11 @@ function [] = mk_expt(expt_name)
 	html = strrep(html, '{{INSTRUCTIONS}}', fileread(opt.instructions_file));
 	html = strrep(html, '{{SHORT_INSTRUCTIONS}}', fileread(opt.short_instructions_file));
 	html = strrep(html, '{{CONSENT}}', fileread(opt.consent_file));
+	
+	html = strrep(html, '{{IM_DIV_HEIGHT}}', num2str(opt.im_height+2));
+	html = strrep(html, '{{IM_DIV_WIDTH}}', num2str(opt.im_width+2));
+	html = strrep(html, '{{IM_HEIGHT}}', num2str(opt.im_height));
+	html = strrep(html, '{{IM_WIDTH}}', num2str(opt.im_width));
 	
 	s = [];
 	for i=1:opt.Npairs
