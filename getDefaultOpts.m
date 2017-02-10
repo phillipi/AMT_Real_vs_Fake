@@ -6,6 +6,7 @@ function [opt] = getDefaultOpts()
 	opt.gt_path = 'gt';
 	opt.Nimgs = 100;                        % number of images to test
 	opt.Npairs = 60;                        % number of paired comparisons per HIT
+	opt.Npractice = 10;                     % number of practice trials per HIT (number of non-practice trials is opt.Npairs-opt.Npractice)
 	opt.Nhits_per_alg = 100;                % number of HITs per algorithm
 	opt.vigilance_freq = 0.1;               % percent of trials that are vigilance tests
 	opt.use_vigilance = true;               % include vigilance trials (obviously fake images to check that Turkers are paying attention)	

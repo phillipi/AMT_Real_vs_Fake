@@ -48,6 +48,22 @@ function [opt] = getOpts(expt_name)
 			opt.paired = false;
 			opt.Nhits_per_alg = 50;
 		
+		case 'colorization_all_variations'
+			opt = getDefaultOpts();
+		
+			opt.which_algs_paths = {'L1cGAN','L2_zhang2016','classrebal_zhang2016'};
+			opt.Nimgs = 1000;
+			opt.ut_id = '41d4680920ca6434cf5b9f412e857f26';
+			opt.base_url = 'https://people.eecs.berkeley.edu/~isola/pix2pix/turk/colorization/all_variations/';
+			opt.instructions_file = './instructions_colorization.html';
+			opt.short_instructions_file = './short_instructions_colorization.html';
+			opt.consent_file = './consent_basic.html';
+			opt.use_vigilance = false;
+			opt.im_height = 256;
+			opt.im_width = 256;
+			opt.paired = true;
+			opt.Nhits_per_alg = 50;
+		
 		otherwise
 			error(sprintf('no opts defined for experiment %s',expt_name));
 	end

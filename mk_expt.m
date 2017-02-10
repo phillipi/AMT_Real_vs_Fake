@@ -91,6 +91,9 @@ function [] = mk_expt(expt_name)
 	html = strrep(html, '{{IM_DIV_WIDTH}}', num2str(opt.im_width+2));
 	html = strrep(html, '{{IM_HEIGHT}}', num2str(opt.im_height));
 	html = strrep(html, '{{IM_WIDTH}}', num2str(opt.im_width));
+    
+    html = strrep(html, '{{N_PRACTICE}}', num2str(opt.Npractice));
+    html = strrep(html, '{{TOTAL_NUM_IMS}}', num2str(opt.Npairs));
 	
 	s = [];
 	for i=1:opt.Npairs
