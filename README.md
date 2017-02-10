@@ -17,4 +17,4 @@ Runs a series "real vs fake" trials. Each trial pits a real image against a gene
 
 ## Citation
 
-This tool was initially developed for ``Colorful Image Colorization".
+This tool was initially developed for <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a>. Feel free to use this <a href="http://richzhang.github.io/colorization/resources/bibtex_eccv2016_colorization.txt">bibtex</a> to cite.
