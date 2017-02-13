@@ -9,7 +9,7 @@ Runs a series "real vs fake" trials. Each trial pits a real image against a "fak
 Matlab
 
 ## Usage
-- Put all images to test in a web accessible folder. This folder should have subfolders for the results of each algorithm you would like to test (names of subfolders are specified in `opt.which_algs_paths`). Must also contain a subfolder for the real images (path: `opt.gt_path`) and (optionally) a folder for vigilance test images (path: `opt.vigilance_path`), which can be obviously fake images used to verify that the Turkers are paying attention. Images should be names "1.jpg", "2.jpg", etc, in consecutive order up to some total number of images N.
+- Put all images to test in a web accessible folder. This folder should have subfolders for the results of each algorithm you would like to test (names of subfolders are specified in `opt.which_algs_paths`). Must also contain a subfolder for the real images (path: `opt.gt_path`) and (optionally) a folder for vigilance test images (path: `opt.vigilance_path`), which can be obviously fake images used to verify that the Turkers are paying attention. Images should be named "1.jpg", "2.jpg", etc, in consecutive order up to some total number of images N.
 - Set experiment parameters by modifying `opt` in `getOpts.m` for experiment with name `expt_name`.
 - Run `mk_expt(expt_name)` to generate data csv and index.html for Turk.
 - Create experiment using AMT website or command line tools. For the former option, paste contents of index.html into HIT html code. Upload HIT data from the generated csv.
