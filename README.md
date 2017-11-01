@@ -15,7 +15,7 @@ Matlab
 - Create experiment using AMT website or command line tools. For the former option, paste contents of index.html into HIT html code. Upload HIT data from the generated csv.
 
 ## Features
-- Can enforce that each Turker can only do HIT once (uses http://uniqueturker.myleott.com/; see `opt.ut_id` in `getDefaultOpts.m`)
+- Can enforce that each Turker can only do HIT once (uses http://uniqueturker.myleott.com/; see `opt.ut_id` in `getDefaultOpts.m` -- Note: If you use this service, you must click "Get Script" on the unique turker webpage to create a new valid `ut_id` for each experiment, don't just copy the "Unique identifier" on the landing page!)
 - If multiple algorithms are specified in `opt.which_algs_paths`, then each HIT tests a _single_ algorithm randomly selected from this list. This way, each participant will only see one algorithm, but participants for each algorithm will be sampled iid from the same Turk population (and, importantly, iid w.r.t. time, so that no algorithm unfairly gets a "better" time of day).
 - If `opt.paired` is true, then "fake/n.jpg" will be pitted against "real/n.jpg"; if false, "fake/n.jpg" will be pitted against "real/m.jpg", for random n and m
 - See `getDefaultOpts.m` for documentation on more features
