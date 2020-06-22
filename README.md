@@ -23,4 +23,4 @@ Python
 
 ## Citation
 
-This tool was initially developed for <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a> in Matlab (see Matlab branch). This master branch has been translated into Python. Feel free to use this <a href="http://richzhang.github.io/colorization/resources/bibtex_eccv2016_colorization.txt">bibtex</a> to cite.
+This tool was initially developed for <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a> in Matlab (see [this](https://github.com/phillipi/AMT_Real_vs_Fake/tree/matlab) branch). This master branch has been translated into Python. Feel free to use this <a href="http://richzhang.github.io/colorization/resources/bibtex_eccv2016_colorization.txt">bibtex</a> to cite.
