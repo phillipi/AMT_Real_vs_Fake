@@ -13,7 +13,7 @@ Python
 - Set experiment parameters by modifying `opt` in `getOpts` function.
 - Run `python mk_expt.py -n EXPT_NAME` to generate data csv and index.html for Turk.
 - Create experiment using AMT website or command line tools. For the former option, paste contents of index.html into HIT html code. Upload HIT data from the generated csv.
-- After collecting results, run `python process_csv.py -f [[CSV FILENAME]]`. This will compute and run bootstrap statistics.
+- After collecting results, run `python process_csv.py -f CSV_FILENAME --N_imgs NUMBER_IMAGES --N_practice NUMBER_PRACTICE`. This will compute and run bootstrap statistics.
 
 ## Features
 - Can enforce that each Turker can only do HIT once (uses http://uniqueturker.myleott.com/; see `opt['ut_id']`)
@@ -23,4 +23,4 @@ Python
 
 ## Citation
 
-This tool was initially developed for <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a> by Phillip Isola, in this [Matlab repository](https://github.com/phillipi/AMT_Real_vs_Fake). This repository is translated into Python. Feel free to use this <a href="http://richzhang.github.io/colorization/resources/bibtex_eccv2016_colorization.txt">bibtex</a> to cite.
+This tool was initially developed for <a href="http://richzhang.github.io/colorization/">Colorful Image Colorization</a> in Matlab (see Matlab branch). This master branch has been translated into Python. Feel free to use this <a href="http://richzhang.github.io/colorization/resources/bibtex_eccv2016_colorization.txt">bibtex</a> to cite.

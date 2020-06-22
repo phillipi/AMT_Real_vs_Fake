@@ -2,37 +2,37 @@
 <html>
 	<head>
 		<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
-
+		
 		<script src="https://s3.amazonaws.com/MTurks/jquery-1.11.2.min.js"></script>
 		<script src="https://s3.amazonaws.com/MTurks/jquery-ui.min.js"></script>
 		<script src="https://s3.amazonaws.com/MTurks/image-picker.min.js"></script>
-
-
+		
+				
 		<style>
 			body {
 				margin: 0px 50px;
 				font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 				font-size: 14pt;
 			}
-
+			
 			#content_div {
 				margin: auto;
 				width: 900px;
 			}
-
+			
 			h3 {
 			}
-
+			
 			#long_info {
 			}
-
+			
 			#couhes {
 				color: #777;
 				font-style: italic;
 				margin: 20px 0px;
 				font-size: 12pt;
 			}
-
+			
 			#start_button, #continue_button {
 				width:300px;
 				height:80px;
@@ -45,7 +45,7 @@
 				border: 2px solid #999;
 				background-color: #CCC;
 			}
-
+			
 			button, #submit_button {
 				width:200px;
 				height:50px;
@@ -58,25 +58,25 @@
 				border: 1px solid #AAA;
 				background-color: #CCC;
 			}
-
+			
 			#images_div {
 				margin: 100px 0px 40px 0px;
 			}
-
+			
 			#trial_num {
 				margin: 20px 0px 0px 0px;
 				font-size:16px;
 				color:#777;
 				font-style:italic;
 			}
-
+			
 			#feedback {
 			}
-
+			
 			#experiment_start {
 				font-size: 20px;
 			}
-
+			
 			table.demo_imgs {
 				text-align: center;
 				font-size: 12pt;
@@ -91,17 +91,28 @@
 <script src="//uniqueturker.myleott.com/lib.js" type="text/javascript"></script>
 <script type="text/javascript">
 (function(){
+    var ut_id = {{UT_ID}};
+    if (UTWorkerLimitReached(ut_id)) {
+        document.getElementById('mturk_form').style.display = 'none';
+        document.getElementsByTagName('body')[0].innerHTML = "You have already completed the maximum number of HITs allowed by this requester. Please click 'Return HIT' to avoid any impact on your approval rating.";
+    }
+})();
+</script>
+
+<!-- <script src="http://uniqueturker.myleott.com/lib.js" type="text/javascript"></script>
+<script type="text/javascript">
+(function(){
     var ut_id = "{{UT_ID}}";
     if (UTWorkerLimitReached(ut_id)) {
         document.getElementById('mturk_form').style.display = 'none';
         document.getElementsByTagName('body')[0].innerHTML = "You have already completed the maximum number of HITs allowed by this requester. Please click 'Return HIT'.";
     }
 })();
-</script>
+</script> -->
 
 <script type="text/javascript">
 
-// from http://stackoverflow.com/questions/15589764/how-to-hide-the-link-to-an-external-web-page-in-a-hit-before-workers-accept-the
+// from http://stackoverflow.com/questions/15589764/how-to-hide-the-link-to-an-external-web-page-in-a-hit-before-workers-accept-the		
 $.extend({
   getUrlVars: function(){
     // From http://code.google.com/p/js-uri/source/browse/trunk/lib/URI.js
@@ -139,10 +150,10 @@ function sequence_helper(gt_side,image_left,image_right) {
 	var curr_im = null;
 	p.gt_side.push(gt_side);
 	curr_im = new Image();
-	curr_im.src = base_url + image_left + '.jpg';
+	curr_im.src = base_url + image_left;
 	p.images_left.push(curr_im);
 	curr_im = new Image();
-	curr_im.src = base_url + image_right + '.jpg';
+	curr_im.src = base_url + image_right;
 	p.images_right.push(curr_im);
 }
 
@@ -155,14 +166,14 @@ function makeExperiment() {
     p.experiment_intro_shown = false;
 	p.npractice = {{N_PRACTICE}};
 	p.total_num_ims = {{TOTAL_NUM_IMS}};
-
+	
 	p.gt_side = [];
 	p.images_left = [];
 	p.images_right = [];
-
-
+	
+	
 	{{SEQUENCE}}
-
+		
     return this;
 }
 
@@ -196,73 +207,73 @@ function continue_to_main_expt() {
 }
 
 function next() {
-
+	
 	$('#feedbackA').html('');
 	$('#feedbackB').html('');
-
+	
 	$('#imageA').css('border','0px solid black');
 	$('#imageB').css('border','0px solid black');
-
+	
     if (p.is_practice && (p.im_num == p.npractice)) {
-
+    	
 		p.is_practice = false;
-
-    	$('#feedback').hide();
+		
+    	$('#feedback').hide();	
     	$('#imageA').hide();
     	$('#imageB').hide();
     	$('#imageA_div').hide();
     	$('#imageB_div').hide();
     	$('#short_instructions').html("");
-
+        
     	$('#experiment_start').show();
-
+    	
     	return;
     }
 	else if (p.im_num == p.total_num_ims) {
-
+		
 		end();
-
+		
 		return;
 	}
-
+	
 	var display_time = 1000;
 	var fade_time = 200;
 	var isi = 300;
-
+	
 	var offset_time = 0;
-
-    $('#feedback').hide();
+	
+    $('#feedback').hide();	
 	$('#imageA').hide();
 	$('#imageB').hide();
 	$('#short_instructions').html("");
 	$('#short_instructions').show();
 	$('#imageA_div').show();
 	$('#imageB_div').show();
-
+	
 	if (p.is_practice) {
 		$('#trial_num').html("<br><center>Practice trial " + (p.im_num+1) + " out of " + p.npractice + "</center>");
 	}
 	else {
 		$('#trial_num').html("<br><center>Trial " + (p.im_num+1-p.npractice) + " out of " + (p.total_num_ims-p.npractice) + "</center>");
 	}
-
+	
 	var imageA = document.getElementById('imageA');
 	imageA.src = p.images_left[p.im_num].src;
-
+	
 	if (first_trial) {
 		offset_time += isi;
 		first_trial = false;
 	}
 	$('#imageA').delay(offset_time+isi*3).fadeIn(0).delay(display_time).fadeOut(0); offset_time += isi*3+display_time;
-
+	
 	var imageB = document.getElementById('imageB');
 	imageB.src = p.images_right[p.im_num].src;
-
+	
 	$('#imageB').delay(offset_time+isi*2).fadeIn(0).delay(display_time).fadeOut(0); offset_time += isi*2+display_time;
-
+	
 	fade_time = 50;
-	setTimeout(function() {
-		$('#trial_num').show();
+	setTimeout(function() { 
+		$('#trial_num').show(); 
 		$('#short_instructions').html("{{SHORT_INSTRUCTIONS}}");
 		$('#buttonA').fadeIn(fade_time);
 		$('#buttonB').fadeIn(fade_time);
@@ -271,21 +282,21 @@ function next() {
 
 
 function submitAnswer(answer) {
-
+	
 	$('#buttonA').hide();
 	$('#buttonB').hide();
 	$('#trial_num').hide();
-
+	
 	if (p.is_practice) {
 		   var is_correct = (p.gt_side[p.im_num]!=answer);
-
+		
 		   if (is_correct) {
 	       	   $('#feedback').html('<img width=24px src="http://web.mit.edu/phillipi/Public/colorization/check.png"/><br><span style="color:green;">You are correct!</span>');
 		   }
 		   else {
 			   $('#feedback').html('<span style="color:#cc0000">Incorrect. That image was real.</span>');
 		   }
-
+		   
 		   if (answer=='left') {
 			   if (is_correct) {
 	      	   		$('#imageA').css('border','6px solid green');
@@ -302,7 +313,7 @@ function submitAnswer(answer) {
 			   		$('#imageB').css('border','6px solid #cc0000');
 			   }
 		   }
-
+		
 		$('#feedback').show();
 		$('#short_instructions').html('');
 		if (p.gt_side[p.im_num]=='left') {
@@ -317,26 +328,26 @@ function submitAnswer(answer) {
    		$('#imageB').show();
    		$('#imageA_div').show();
    		$('#imageB_div').show();
-
-		$("#selection"+(p.im_num+1)).val(answer);
-
+		
+		$("#selection"+(p.im_num)).val(answer);
+		
 		p.im_num = p.im_num+1;
-
+				
 		setTimeout(function() { next(); }, 2400);
 	}
 	else {
 		var is_correct = (p.gt_side[p.im_num]!=answer);
 		num_correct += is_correct;
-
+		
 		$('#imageA').hide();
 		$('#imageB').hide();
 		$('#imageA_div').hide();
 		$('#imageB_div').hide();
-
-		$("#selection"+(p.im_num+1)).val(answer);
-
+		
+		$("#selection"+(p.im_num)).val(answer);
+		
 		p.im_num = p.im_num+1;
-
+				
 		next();
 	}
 }
@@ -346,9 +357,9 @@ function startExperiment() {
     if (p == null) {
         return;
     }
-
+    
     p.is_practice = true;
-
+	
     $('#buttons_start').hide();
     $('#long_info').hide();
     $('#couhes').hide();
@@ -361,18 +372,18 @@ function startExperiment() {
 
 
 function init() {
-
+	
 	$(window).bind('resize', function() { setBodyHeight(); });
-
+	
 	makeExperiment();
-
+	
 	$('#imageA').hide();
 	$('#imageB').hide();
 	$('#buttonA').hide();
 	$('#buttonB').hide();
-
+	
 	$("#submitButton").hide();
-
+	
 	if (p.is_assigned) {
 		$('#start_button').removeAttr('disabled');
 		$('#start_button').html('Start!');
@@ -385,7 +396,7 @@ function restartExperiment() {
 }
 
 </script>
-
+    
   </head>
 
 
@@ -404,39 +415,39 @@ function restartExperiment() {
     </div>
 
     <div id= "feedback" align=center style="display:none"></div>
-
+	
     <div id = "experiment_start" style="width: 800px; margin: 0 auto; text-align: left; display:none">
       <br>You've completed the practice exercise!  Click "Continue" to continue on to the main task. The main task will be identical except that you won't be told whether or not your guess was correct.</br>
 	  <div id = "buttons_continue" align=center>
 		  <button id="continue_button" type="button" onClick="continue_to_main_expt()">Continue!</button>
 	  </div>
     </div>
-
+	
 	<div id="trial_num" style="display:none"></div>
-
+    
     <div id="short_info" align="center" style="width: 80%; margin: 0 auto; text-align: left; display:none" align = center>
     </div>
 
     <br>
     <br>
-
-
+    
+    
     <div id="long_info" style = "width:100%">
         {{INSTRUCTIONS}}
     </div>
 
-
+    
 	  <div id = "buttons_start" align=center>
       	<br>
       	<button id="start_button" type="button" onClick="startExperiment()" disabled=true><span style='font-size:16pt'>Please accept HIT to start</span></button>
-
+		
       	<div id = "not_assigned" align=left style = "display:none"">
       		<p>Please accept the HIT to begin!</p>
       	</div>
 	  </div>
 
-    <div id="done" align = "center" style = "display:none">
-        Thank you! You have completed the experiment.<br><br><div id="score"></div>
+    <div id="done" align = "center" style = "display:none"> 
+        Thank you! You have completed the experiment.<br><br><div id="score"></div> 
 		<div><textarea id="comments" name="comments" rows="3" cols="31">Comments?</textarea></div><br><br>
 		Please click the submit button below to finish.
     </div>
@@ -452,7 +463,7 @@ function restartExperiment() {
     <br>
 
   </div>
-
+  
 {{SELECTION}}
 
 
